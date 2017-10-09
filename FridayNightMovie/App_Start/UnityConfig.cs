@@ -5,6 +5,8 @@ using System;
 using System.Web.Http;
 using System.Collections.Generic;
 using System.Web.Http.Dependencies;
+using FridayNightMovie.Interfaces;
+using FridayNightMovie.Services;
 
 namespace FridayNightMovie
 {
@@ -23,7 +25,8 @@ namespace FridayNightMovie
             UnityContainer container = new UnityContainer();
             //container.RegisterType<IYourInterfaceName, YourConcreteClassName>();
 
-            
+            container.RegisterType<IBaseService, BaseService>();
+            container.RegisterType<IMovieService, MovieService>();
 
             DependencyResolver.SetResolver(new UnityDependencyResolver(container));
             config.DependencyResolver = new UnityResolver(container);
