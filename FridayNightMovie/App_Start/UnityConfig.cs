@@ -1,42 +1,65 @@
-using System;
+using System.Web.Mvc;
 using Microsoft.Practices.Unity;
-using Microsoft.Practices.Unity.Configuration;
+using Unity.Mvc5;
+using System;
+using System.Web.Http;
+using System.Collections.Generic;
+using System.Web.Http.Dependencies;
 
-namespace FridayNightMovie.App_Start
+namespace FridayNightMovie
 {
-    /// <summary>
-    /// Specifies the Unity configuration for the main container.
-    /// </summary>
-    public class UnityConfig
+    public sealed class UnityConfig
     {
-        #region Unity Container
-        private static Lazy<IUnityContainer> container = new Lazy<IUnityContainer>(() =>
-        {
-            var container = new UnityContainer();
-            RegisterTypes(container);
-            return container;
-        });
 
-        /// <summary>
-        /// Gets the configured Unity container.
-        /// </summary>
-        public static IUnityContainer GetConfiguredContainer()
+        private readonly static UnityConfig _instance = new UnityConfig();
+
+        static UnityConfig() { }
+        private UnityConfig() { }
+
+        public static UnityConfig Instance { get { return _instance; } }
+
+        public void RegisterComponents(HttpConfiguration config)
         {
-            return container.Value;
+            UnityContainer container = new UnityContainer();
+            //container.RegisterType<IYourInterfaceName, YourConcreteClassName>();
+
+            
+
+            DependencyResolver.SetResolver(new UnityDependencyResolver(container));
+            config.DependencyResolver = new UnityResolver(container);
         }
-        #endregion
-
-        /// <summary>Registers the type mappings with the Unity container.</summary>
-        /// <param name="container">The unity container to configure.</param>
-        /// <remarks>There is no need to register concrete types such as controllers or API controllers (unless you want to 
-        /// change the defaults), as Unity allows resolving a concrete type even if it was not previously registered.</remarks>
-        public static void RegisterTypes(IUnityContainer container)
+    }
+    public class UnityResolver : System.Web.Http.Dependencies.IDependencyResolver
+    {
+        protected IUnityContainer container;
+        public UnityResolver(IUnityContainer container)
         {
-            // NOTE: To load from web.config uncomment the line below. Make sure to add a Microsoft.Practices.Unity.Configuration to the using statements.
-            // container.LoadConfiguration();
+            if (container == null)
+                throw new ArgumentNullException("container");
 
-            // TODO: Register your types here
-            // container.RegisterType<IProductRepository, ProductRepository>();
+            this.container = container;
+        }
+        public object GetService(Type serviceType)
+        {
+            try { return container.Resolve(serviceType); }
+            catch (ResolutionFailedException)
+            {
+                return null;
+            }
+        }
+        public IEnumerable<object> GetServices(Type serviceType)
+        {
+            try { return container.ResolveAll(serviceType); }
+            catch (ResolutionFailedException) { return new List<object>(); }
+        }
+        public IDependencyScope BeginScope()
+        {
+            IUnityContainer child = container.CreateChildContainer();
+            return new UnityResolver(child);
+        }
+        public void Dispose()
+        {
+            container.Dispose();
         }
     }
 }
