@@ -72,7 +72,7 @@ namespace FridayNightMovie.Services
         {
             _baseService.SqlAdapter.ExecuteQuery(new DbCommandDef
             {
-                DbCommandText = "dbo.Quotes_UpdateById",
+                DbCommandText = "dbo.MovieList_UpdateById",
                 DbCommandType = System.Data.CommandType.StoredProcedure,
                 DbParameters = new SqlParameter[]
                 {

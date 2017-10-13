@@ -5,7 +5,7 @@
 
 <!DOCTYPE html>
 
-<html data-ng-app="myApp">
+<html data-ng-app="myApp" data-ng-cloak>
 <head>
     <meta name="viewport" content="width=device-width" />
     <link href="~/Content/bootstrap.min.css" rel="stylesheet" />
@@ -13,15 +13,19 @@
 
     <title>Index</title>
 </head>
-<body>
-    <div> 
+<body data-ng-controller="movieCtrl as mc">
+    <div class="container" id="movieBox">
+        <h2>{{mc.movieList}}</h2>
+        <button type="button" class="btn btn-danger" data-ng-click="mc.getMovie()">Get Movie</button>
     </div>
+        
 
     <script src="~/Scripts/jquery-1.10.2.min.js"></script>
     <script src="~/Scripts/bootstrap.min.js"></script>
-    <script src="~/Scripts/jquery-1.10.2.intellisense.js"></script>
     <script src="~/Scripts/angular.min.js"></script>
     <script src="~/Scripts/angular-ui/ui-bootstrap-tpls.min.js"></script>
     <script src="~/Scripts/site/app.js"></script>
+    <script src="~/Scripts/site/movieService.js"></script>
+    <script src="~/Scripts/site/movieController.js"></script>
 </body>
 </html>
