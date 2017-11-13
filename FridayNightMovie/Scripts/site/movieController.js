@@ -18,6 +18,7 @@
         vm.getMovie = _getMovie;
 
         vm.movieList = "Friday Night Movie";
+        vm.genre;
 
         function _getMovie() {
             console.log("fuck you cunt");
@@ -30,6 +31,7 @@
             return vm.movieService.getRandom().then(function (data) {
                 console.log(data);
                 vm.movieList = data.Title;
+                vm.genre = data.Genre;
             })
         }
     }

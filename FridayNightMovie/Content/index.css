@@ -2,9 +2,10 @@
     background-color: black;
 }
 
-h2 {
+h2, h5 {
     color: white;
 }
+
 
 [ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak {
     display: none !important;
